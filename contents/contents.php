@@ -1,6 +1,6 @@
 <?php
 class contents{
-    public function main_contetn(){
+    public function main_content(){
 ?>
 <div class="row">
 <div class="content">

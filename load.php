@@ -4,7 +4,7 @@
 
 function classAutoLoad($classname){
 
-    $directories = ["contents", "layouts", "menus"];
+    $directories = ["contents", "Layout", "menus"];
 
     foreach($directories AS $dir){
         $filename = dirname(__FILE__) . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR . $classname . ".php";
@@ -20,6 +20,7 @@ spl_autoload_register('classAutoLoad');
     $ObjLayouts = new layouts();
     $ObjMenus = new menus();
     $ObjHeadings = new headings();
+    $ObjCont= new contents();
 
 
 
