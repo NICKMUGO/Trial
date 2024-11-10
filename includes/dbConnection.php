@@ -17,32 +17,35 @@
             $this->db_name = $db_name;
             
             $this->connection($db_type, $db_host, $db_port, $db_user, $db_pass, $db_name);
+
+            if($this->connection == null) {
+                throw new Exception("Database connection failed.");
+            }
         }
         public function connection($db_type, $db_host, $db_port, $db_user, $db_pass, $db_name){
             switch($db_type){
                 case 'PDO' :
-                    if($db_port<>Null){
-                        $db_host .= ":" . $db_port;
-                    }
                     try {
-                        // Create the connection
+                        if($db_port != null){
+                            $db_host .= ":" . $db_port;
+                        }
                         $this->connection = new PDO("mysql:host=$db_host;dbname=$db_name", $db_user, $db_pass);
-                        // set the PDO error mode to exception
                         $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                        // echo "Connected successfully :-)";
-                      } catch(PDOException $e) { return "Connection failed: " . $e->getMessage(); }
-                      break;
-                case 'MySQLi' :
-                    if($db_port<>Null){
-                        $db_host .= ":" . $db_port;
-                    }
-                    // Create connection
-                    $this->connection = new mysqli($db_host, $db_user, $db_pass, $db_name);
-                    // Check connection
-                    if ($this->connection->connect_error) { return "Connection failed: " . $this->connection->connect_error; } else{ 
-                        // echo "Connected successfully"; 
+                    } catch(PDOException $e) {
+                        echo "Connection failed: " . $e->getMessage();
                     }
                     break;
+                case 'MySQLi' :
+                        if($db_port != null){
+                            $db_host .= ":" . $db_port;
+                        }
+                        $this->connection = new mysqli($db_host, $db_user, $db_pass, $db_name);
+                        if ($this->connection->connect_error) {
+                            echo "Connection failed: " . $this->connection->connect_error;
+                        }else {
+                            echo "MySQLi connection successful!";
+                        }
+                        break;
             }
         }
 
@@ -89,7 +92,7 @@
         $fieldDetails = NULL;
         $fieldNames = implode('`, `',  array_keys($data));
         $fieldValues = implode("', '",  array_values($data));
-        $sth = "INSERT INTO $table (`$fieldNames`) VALUES ('$fieldValues')";
+        $sth = "INSERT INTO $table ($fieldNames) VALUES ('$fieldValues')";
         return $this->extracted($sth);
     }
 /**************************************************************************************************
